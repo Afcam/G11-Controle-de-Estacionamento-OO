@@ -29,7 +29,7 @@ Aqui estão as principais classes do nosso Sistema de Estacionamento:
     UML do Estacionamento
 </p>
 
-### Uso de caso
+<!-- ### Uso de caso
 
 Aqui estão os principais atores em nosso sistema:
 
@@ -52,7 +52,7 @@ Aqui estão os principais casos de uso para estacionamento:
 * **Pagamento com cartão de crédito:** Para pagar com cartão de crédito.
 * **Pagamento à vista:** Para pagar em dinheiro.
 * **Adicionar / modificar taxa de estacionamento:** Para permitir que o administrador adicione ou
-  modifique a taxa de estacionamento por hora.
+  modifique a taxa de estacionamento por hora. -->
 
 ### Code
 
