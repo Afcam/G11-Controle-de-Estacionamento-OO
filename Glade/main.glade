@@ -4,16 +4,30 @@
   <requires lib="gtk+" version="3.24"/>
   <object class="GtkWindow" id="Login">
     <property name="can-focus">False</property>
+    <property name="type">popup</property>
+    <property name="window-position">center</property>
+    <property name="default-width">440</property>
+    <property name="default-height">250</property>
+    <property name="icon">../parking.png</property>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <placeholder/>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="stock">gtk-stop</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
         </child>
         <child>
-          <object class="GtkEntry">
+          <object class="GtkEntry" id="Address1">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
           </object>
@@ -24,7 +38,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkSwitch">
+          <object class="GtkEntry" id="Address">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
           </object>
@@ -33,6 +47,9 @@
             <property name="fill">True</property>
             <property name="position">2</property>
           </packing>
+        </child>
+        <child>
+          <placeholder/>
         </child>
       </object>
     </child>
