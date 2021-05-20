@@ -174,7 +174,7 @@ class Hub:
         else:
             amount = self.parkinglot.pay_ticket(ticket)
 
-        print(f'\nTOTAL:\033[33m{amount}\033[m.')
+        print(f'\nTOTAL: \033[33m{amount}\033[m.')
 
 
 if __name__ == "__main__":

@@ -1,5 +1,7 @@
 # common.py
 from enum import Enum
+from datetime import *
+import math
 
 
 class ParkingTicketStatus(Enum):
@@ -80,5 +82,20 @@ class Ticket():
         self.exit_time = exit_time
 
     def elapsed_time(self):
-        time =  self.exit_time -  self.entry_time
-        return time
+        diff =  self.exit_time -  self.entry_time
+        return int(diff.total_seconds()/60)
+
+if __name__ == "__main__":
+    now = datetime.now()
+    # tick = Ticket(now,None)
+    AM6 = now.replace(day= 17,hour=6, minute=0, second=0, microsecond=0)
+    time =  now -  AM6
+    minutes = int(time.total_seconds()/60)
+    # hours = int(time.)
+
+
+    days = time.days
+    print(minutes)
+    # PM20 = now.replace(hour=20, minute=0, second=0, microsecond=0)
+
+

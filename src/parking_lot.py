@@ -81,14 +81,17 @@ class ParkingLot:
             ticket.set_exit_time(now)
 
         elapsed_time = ticket.elapsed_time()
-        elapsed_time = elapsed_time.minutes()
 
-        if elapsed_time < 15 :
+        if ticket.vehicle.person() !=None:
+            rate = MonthlyParkingRate()
+        elif elapsed_time < 15 :
             rate = ParkingRate()
         elif 15 <= elapsed_time < 9*60:
             rate = FracParkingRate()
         elif 9*60 <= elapsed_time:
             rate = HourParkingRate()
+        else:
+            rate = DailyParkingRate()
 
         ticket.paid()
         self.__active_tickets.remove(ticket)
