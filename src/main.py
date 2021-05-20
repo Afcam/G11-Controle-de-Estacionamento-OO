@@ -92,7 +92,7 @@ class Hub:
             phone = input("Numero de Celular: ")
             landline = input("Telefone Fixo: ")
 
-            if name==None  or license_number=None or phone=None:
+            if name==None  or license_number==None or phone==None:
                 raise Exception('DadosPessoaisIncompletosException')
 
             print(f'\n\nNome: {name} \t CNH: {license_number}')
@@ -123,8 +123,8 @@ class Hub:
             header("CADASTRO DE VEICULO")
             make = input("Fabricante: ")
             model = input("Modelo: ")
-            if plate_number==None:
-                person_name = input("Placa: ")
+            if plate_number == None:
+                plate_number = input("Placa: ")
             person_name = input("Proprietário: ")
             if person_name!=None:
                 person = self.parkinglot.check_person(person_name)
@@ -133,7 +133,7 @@ class Hub:
             else:
                 person = None
 
-            if make==None  or model=None or person_name=None:
+            if make==None  or model==None or person_name==None:
                 raise Exception('DadosVeiculosIncompletosException')
 
 
