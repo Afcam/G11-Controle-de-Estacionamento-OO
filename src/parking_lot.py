@@ -1,6 +1,8 @@
 # parking_lot.py
-from src.parking_rate import ParkingRate
-from src.common import *
+from parking_rate import ParkingRate
+from vehicle import *
+from common import *
+from datetime import *
 
 
 class ParkingLot:
@@ -8,25 +10,28 @@ class ParkingLot:
         self.__name = name
         self.__parking_rate = ParkingRate()
 
-        self.__vehicles = {}
+        self.__vehicles = []
         self.__accounts = []
         self.__active_tickets = {}
 
-    # def __getattr__(self, name):
-    #     return getattr(self.instance, name)
+    def name(self):
+        return self.__name
 
-    # def get_new_parking_ticket(self, vehicle):
-    # synchronizing to allow multiple entrances panels to issue a new
-    # parking ticket without interfering with each other
-    #     self.__lock.acquire()
-    #     ticket = ParkingTicket()
-    #     vehicle.assign_ticket(ticket)
-    #     ticket.save_in_DB()
-    #     # if the ticket is successfully saved in the database, we can increment the parking spot count
-    #     self.__increment_spot_count(vehicle.get_type())
-    #     self.__active_tickets.put(ticket.get_ticket_number(), ticket)
-    #     self.__lock.release()
-    #     return ticket
+    def new_vehicle(self, plate_number, make, model, person):
+        exist=False
+        for item in self.__vehicles:
+            if item.plate_number() == plate_number:
+                exist=True
+                break
+
+        if not exist:
+            new = Vehicle(plate_number, make, model, person)
+            self.__accounts.append(new)
+            status = True
+        else:
+            # raise error
+            status = False
+        return status
 
     def new_account(self, name, address, phone, license_number, landline):
         new = Account(name, address, phone, license_number, landline)
@@ -34,7 +39,30 @@ class ParkingLot:
 
     def list_accounts(self):
         for acc in self.__accounts:
-            print(acc.info()[0])
+            print(f'\n{acc.info()[0]}')
+
+    def list_vehicles(self):
+        for acc in self.__vehicles:
+            print(f'\n{acc.info()[0]}')
+
+
+            from datetime import *
+
+    def check_person(self, person_name):
+        find = False
+        for acc in self.__accounts:
+            if acc.name() == person_name:
+                exist=True
+                break
+
+        if not exist:
+            new = Vehicle(plate_number, make, model, person)
+            self.__accounts.append(new)
+            status = True
+        else:
+            # raise error
+            status = False
+        return status
 
 
 if __name__ == "__main__":
