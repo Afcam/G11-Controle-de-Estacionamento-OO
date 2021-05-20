@@ -92,6 +92,9 @@ class Hub:
             phone = input("Numero de Celular: ")
             landline = input("Telefone Fixo: ")
 
+            if name==None  or license_number=None or phone=None:
+                raise Exception('DadosPessoaisIncompletosException')
+
             print(f'\n\nNome: {name} \t CNH: {license_number}')
             print(f'Telefone: {phone} \t Telefone Fixo: {landline}')
             print(f'Enereço:{address.info()}\n')
@@ -121,7 +124,7 @@ class Hub:
             make = input("Fabricante: ")
             model = input("Modelo: ")
             if plate_number==None:
-                plate_number = input("Placa: ")
+                person_name = input("Placa: ")
             person_name = input("Proprietário: ")
             if person_name!=None:
                 person = self.parkinglot.check_person(person_name)
@@ -129,6 +132,10 @@ class Hub:
                     print("Prorietario não encontrado")
             else:
                 person = None
+
+            if make==None  or model=None or person_name=None:
+                raise Exception('DadosVeiculosIncompletosException')
+
 
             print(f'\n\nModelo: {make} \t Fabricante: {model}')
             print(f'Placa: {plate_number} ')
