@@ -4,9 +4,9 @@ import os
 # from .common import *
 # from .parking_rate import *
 # from .vehicle import *
-from src.parking_lot import ParkingLot
+from parking_lot import ParkingLot
 
-from src.common import *
+from common import *
 
 
 def line(tam=42):
@@ -14,6 +14,7 @@ def line(tam=42):
 
 
 def header(txt):
+    print("\n")
     print(line())
     print(txt.center(42))
     print(line())
@@ -45,6 +46,7 @@ def menu(msg,menu_list):
 
 
 def getAddress():
+    # print("\n-- Adress\r\n")
     country = input("Pais: ")
     state = input("Estado: ")
     city = input("Cidade: ")
@@ -55,14 +57,33 @@ def getAddress():
     return address
 
 
-def main():
-    header("Bem Vindo")
-    name = input('Nome do Estacionamento: ')
-    parkinglot = ParkingLot(name)
+class Hub:
+    def __init__(self, name:None):
+        self.parkinglot = ParkingLot(name)
 
-    while True:
-        op = menu(f'ESTACIONAMENTO {name}',['Cadastrar Mensalista', 'Cadastrar Veiculo', 'Gerar Ticket', 'Pagar Ticket','Sair do sistema'])
-        if op == 1:
+
+
+    def main(self):
+        while True:
+            op = menu(f'ESTACIONAMENTO {self.parkinglot.name()}',['Cadastrar Mensalista', 'Cadastrar Veiculo', 'Gerar Ticket', 'Pagar Ticket','Sair do sistema'])
+            if op == 1:
+                self.cadastro_mensalista()
+            elif op == 2:
+                self.cadastro_veiculo()
+            elif op == 3:
+                header("GERAR TICKET")
+            elif op == 4:
+                header("PAGAR TICKET")
+            elif op == 5:
+                print("Saindo do sistema... Até logo!")
+                break
+            else:
+                print('ERRO! Digite uma opção válida')
+
+
+    def cadastro_mensalista(self):
+        loop = True
+        while loop:
             header("CADASTRO DE MENSALISTA")
             name = input("Nome Completo: ")
             license_number = input("CNH: ")
@@ -70,20 +91,65 @@ def main():
             phone = input("Numero de Celular: ")
             landline = input("Telefone Fixo: ")
 
-            parkinglot.new_account(name, address, phone, license_number, landline)
-            parkinglot.list_accounts()
-        elif op == 2:
+            print(f'\n\nNome: {name} \t CNH: {license_number}')
+            print(f'Telefone: {phone} \t Telefone Fixo: {landline}')
+            print(f'Enereço:{address.info()}\n')
+
+            print('Os Dados estão corretos?')
+            for idx, item in enumerate(['Sair', 'Sim', 'Não']):
+                print(f'{idx}\033[m-\033[34m{item}\033[m',end='\t')
+            while True:
+                op = read_int('\n\033[32mSua Opção: \033[m')
+                if op == 1:
+                    self.parkinglot.new_account(name, address, phone, license_number, landline)
+                    print(f'\nUsuário \033[33m{name}\033[m cadastrado com \033[32msucesso\033[m.')
+                    loop = False
+                    break
+                elif op == 2:
+                    break
+                elif op == 0:
+                    loop = False
+                    breaks
+                else:
+                    print('ERRO! Digite uma opção válida')
+
+
+    def cadastro_veiculo(self):
+        loop = True
+        while loop:
             header("CADASTRO DE VEICULO")
-        elif op == 3:
-            header("GERAR TICKET")
-        elif op == 4:
-            header("PAGAR TICKET")
-        elif op == 5:
-            print("Saindo do sistema... Até logo!")
-            break
-        else:
-            print('ERRO! Digite uma opção válida')
+            make = input("Fabricante: ")
+            model = input("Modelo: ")
+            plate_number = input("Placa: ")
+            person = self.check_person()
+
+            print(f'\n\nModelo: {make} \t Fabricante: {model}')
+            print(f'Placa: {plate_number} ')
+
+            print('Os Dados estão corretos?')
+            for idx, item in enumerate(['Sair', 'Sim', 'Não']):
+                print(f'{idx}\033[m-\033[34m{item}\033[m',end='\t')
+            while True:
+                op = read_int('\n\033[32mSua Opção: \033[m')
+                if op == 1:
+                    self.parkinglot.new_vehicle( plate_number, make, model, person)
+                    print(f'\nVeiculo \033[33m{plate_number}\033[m cadastrado com \033[32msucesso\033[m.')
+                    loop = False
+                    break
+                elif op == 2:
+                    break
+                elif op == 0:
+                    loop = False
+                    break
+                else:
+                    print('ERRO! Digite uma opção válida')
+
+    def check_person(self):
+        return None
 
 if __name__ == "__main__":
-    main()
+    header("Bem Vindo")
+    name = input('Nome do Estacionamento: ')
+    Program = Hub(name)
+    Program.main()
 

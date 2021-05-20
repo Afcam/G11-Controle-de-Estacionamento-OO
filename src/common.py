@@ -18,6 +18,9 @@ class Address:
         self.__zip_code = zip_code
         self.__country = country
 
+    def info(self):
+        return self.__country, self.__city, self.__state, self.__street_address, self.__zip_code
+
 
 class Person:
     def __init__(self, name, address, phone, license_number, landline=None):
@@ -29,6 +32,9 @@ class Person:
 
     def info(self):
         return self.__name, self.__address, self.__phone, self.__landline, self.__license_number
+
+    def name(self):
+        return  self.__name
 
 
 

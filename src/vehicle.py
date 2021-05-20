@@ -1,5 +1,5 @@
 # parking_interface.py
-from .common import  *
+from common import  *
 
 
 class Vehicle:
@@ -11,6 +11,9 @@ class Vehicle:
 
     def person(self):
         return self.__person
+
+    def plate_number(self):
+        return self.__plate_number
 
     def info(self):
         return self.__make, self.__model, self.__plate_number
