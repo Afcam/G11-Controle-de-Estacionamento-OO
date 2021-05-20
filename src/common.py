@@ -58,3 +58,27 @@ class Account(Person):
     def list_vehicle(self):
         for car in self.__cars:
             print(car.plate_number)
+
+
+class Ticket():
+    def __init__(self, entry_time, vehicle, status=ParkingTicketStatus.ACTIVE):
+        self.__status = status
+        self.entry_time = entry_time
+        self.exit_time = entry_time
+        self.vehicle = vehicle
+
+    def status(self):
+        return self.__status
+
+    def entry_time(sel):
+        return self.entry_time.time()
+
+    def paid(self):
+        self.__status = ParkingTicketStatus.PAID
+
+    def set_exit_time(self,exit_time):
+        self.exit_time = exit_time
+
+    def elapsed_time(self):
+        time =  self.exit_time -  self.entry_time
+        return time

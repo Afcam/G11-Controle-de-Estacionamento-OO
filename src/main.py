@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from datetime import date, datetime
 import os
 # from .parking_lot import *
 # from .common import *
@@ -71,9 +72,9 @@ class Hub:
             elif op == 2:
                 self.cadastro_veiculo()
             elif op == 3:
-                header("GERAR TICKET")
+                self.GerarTicket()
             elif op == 4:
-                header("PAGAR TICKET")
+                self.PagarTicket()
             elif op == 5:
                 print("Saindo do sistema... Até logo!")
                 break
@@ -109,19 +110,25 @@ class Hub:
                     break
                 elif op == 0:
                     loop = False
-                    breaks
+                    break
                 else:
                     print('ERRO! Digite uma opção válida')
 
 
-    def cadastro_veiculo(self):
-        loop = True
-        while loop:
+    def cadastro_veiculo(self,plate_number=None):
+        while True:
             header("CADASTRO DE VEICULO")
             make = input("Fabricante: ")
             model = input("Modelo: ")
-            plate_number = input("Placa: ")
-            person = self.check_person()
+            if plate_number==None:
+                plate_number = input("Placa: ")
+            person_name = input("Proprietário: ")
+            if person_name!=None:
+                person = self.parkinglot.check_person(person_name)
+                if person == None:
+                    print("Prorietario não encontrado")
+            else:
+                person = None
 
             print(f'\n\nModelo: {make} \t Fabricante: {model}')
             print(f'Placa: {plate_number} ')
@@ -132,20 +139,43 @@ class Hub:
             while True:
                 op = read_int('\n\033[32mSua Opção: \033[m')
                 if op == 1:
-                    self.parkinglot.new_vehicle( plate_number, make, model, person)
+                    new =  self.parkinglot.new_vehicle( plate_number, make, model, person)
                     print(f'\nVeiculo \033[33m{plate_number}\033[m cadastrado com \033[32msucesso\033[m.')
-                    loop = False
+                    return new
                     break
                 elif op == 2:
                     break
                 elif op == 0:
-                    loop = False
-                    break
+                    return None
                 else:
                     print('ERRO! Digite uma opção válida')
 
-    def check_person(self):
-        return None
+    def GerarTicket(self):
+        header("Gerar Ticket")
+        plate_number = input("Placa do Veiculo: ")
+
+        veh = self.parkinglot.check_vehicle(plate_number)
+        if veh == None:
+            veh = self.cadastro_veiculo(plate_number)
+
+        ticket = self.parkinglot.new_ticket(veh)
+        dt_string = ticket.entry_time.strftime("%d/%m/%Y %H:%M:%S")
+        print(f'\nTicket cadastrado em\033[33m',dt_string, '\033[mcom \033[32msucesso\033[m.')
+
+
+    def PagarTicket(self):
+        header("Pagar Ticket")
+        plate_number = input("Placa do Veiculo: ")
+
+
+        ticket = self.parkinglot.get_ticket(plate_number)
+        if ticket == None:
+            raise Exception('TicketNãoExiste')
+        else:
+            amount = self.parkinglot.pay_ticket(ticket)
+
+        print(f'\nTOTAL:\033[33m{amount}\033[m.')
+
 
 if __name__ == "__main__":
     header("Bem Vindo")
