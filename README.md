@@ -56,6 +56,8 @@ A seguir está a estrutura de código básico para o nosso sistema de estacionam
 ```python
 # common.py
 from enum import Enum
+from datetime import *
+import math
 
 
 class ParkingTicketStatus(Enum):
@@ -118,10 +120,15 @@ class Account(Person):
 
 class Ticket():
     def __init__(self, entry_time, vehicle, status=ParkingTicketStatus.ACTIVE):
-        self.__status = status
-        self.entry_time = entry_time
-        self.exit_time = entry_time
-        self.vehicle = vehicle
+        self.AM6 = entry_time.replace(hour=6, minute=0, second=0, microsecond=0)
+        self.PM20 = entry_time.replace(hour=20, minute=0, second=0, microsecond=0)
+        if self.AM6.time() >= entry_time.time() >= self.PM20.time() :
+            raise Exception('EstacionamentoFechadoException')
+        else:
+            self.__status = status
+            self.entry_time = entry_time
+            self.exit_time = entry_time
+            self.vehicle = vehicle
 
     def status(self):
         return self.__status
@@ -133,11 +140,18 @@ class Ticket():
         self.__status = ParkingTicketStatus.PAID
 
     def set_exit_time(self,exit_time):
-        self.exit_time = exit_time
+        if self.AM6.time() >= exit_time.time() >= self.PM20.time() :
+            raise Exception('EstacionamentoFechadoException')
+        else:
+            self.exit_time = exit_time
 
     def elapsed_time(self):
-        time =  self.exit_time -  self.entry_time
-        return time
+        diff =  self.exit_time -  self.entry_time
+        # minutes = int(diff.total_seconds()/60)
+        dates =  AM6.date() -  PM8.date()
+        days = dates.days
+        minutes = int(diff.total_seconds()/60) - days*10*60
+        return days, minutes
 
 ```
 
@@ -205,41 +219,38 @@ class ParkingLot:
 
     def new_ticket(self, vehicle):
         now = datetime.now()
-        AM6 = now.replace(hour=6, minute=0, second=0, microsecond=0)
-        PM20 = now.replace(hour=20, minute=0, second=0, microsecond=0)
 
-        if AM6.time() >= now.time() >= PM20.time() :
-            raise Exception('EstacionamentoFechadoException')
-        else:
-            new_ticket = Ticket(now, vehicle)
-            self.__active_tickets.append(new_ticket)
-            return new_ticket
+        new_ticket = Ticket(now, vehicle)
+        self.__active_tickets.append(new_ticket)
+        return new_ticket
 
     def pay_ticket(self, ticket):
         now = datetime.now()
-        AM6 = now.replace(hour=6, minute=0, second=0, microsecond=0)
-        PM20 = now.replace(hour=20, minute=0, second=0, microsecond=0)
 
-        ticket.set_exit_time
-        if AM6.time() >= now.time() >= PM20.time() :
-            raise Exception('EstacionamentoFechadoException')
+        ticket.set_exit_time(now)
+
+        days, minutes = ticket.elapsed_time()
+
+        if ticket.vehicle.person() !=None:
+            rate = MonthlyParkingRate()
+        elif days > 0:
+            rate = NightParkingRate()
+            amount = rate.payment(days,minutes)
         else:
-            ticket.set_exit_time(now)
+            if minutes < 15 :
+                rate = ParkingRate()
+            elif 15 <= minutes < 9*60:
+                rate = FracParkingRate()
+            elif 9*60 <= minutes:
+                rate = HourParkingRate()
+            else:
+                rate = DailyParkingRate()
 
-        elapsed_time = ticket.elapsed_time()
-        elapsed_time = elapsed_time.minutes()
-
-        if elapsed_time < 15 :
-            rate = ParkingRate()
-        elif 15 <= elapsed_time < 9*60:
-            rate = FracParkingRate()
-        elif 9*60 <= elapsed_time:
-            rate = HourParkingRate()
+            amount = rate.payment(minutes)
 
         ticket.paid()
         self.__active_tickets.remove(ticket)
 
-        amount = rate.payment(elapsed_time)
         return amount
 ```
 
@@ -282,6 +293,8 @@ class Vehicle:
 
 ```python
 # parking_rate.py
+# parking_rate.py
+# from .common import *
 
 
 class ParkingRate:
@@ -313,25 +326,30 @@ class HourParkingRate(FracParkingRate):
         return amount
 
 
-class DailyParkingRate(ParkingRate):
-    def __init__(self, rate=0.2, fee=110.0,daily_hour=9):
+class DailyParkingRate(HourParkingRate):
+    def __init__(self, rate=0.5, fee=110.0,daily_hour=9):
         super().__init__(rate)
         self.fee = fee
         self.daily_hour = daily_hour
 
     def payment(self, time):
+        if time >=self.daily_hour*60:
+            self.rate= 0.2
+        else:
+            self.rae= 0.5
+
         daily = time//(self.daily_hour*60)
         amount = daily*self.fee + super().payment(time%(self.daily_hour*60))
         return amount
 
 
-class NightParkingRate(HourParkingRate):
+class NightParkingRate(DailyParkingRate):
     def __init__(self, rate=0.5, frac_deduction=1.0, hour_deduction=1.0, fee=30.0):
         super().__init__(rate, frac_deduction, hour_deduction)
         self.fee = fee
 
-    def payment(self, time):
-        amount = self.fee + super().payment(time)
+    def payment(self, days,time):
+        amount = self.fee*days + super().payment(time)
         return amount
 
 
@@ -342,6 +360,7 @@ class MonthlyParkingRate():
     def payment(self, time: None):
         amount = self.fee
         return amount
+
 
 ```
 
