@@ -59,44 +59,38 @@ class ParkingLot:
 
     def new_ticket(self, vehicle):
         now = datetime.now()
-        AM6 = now.replace(hour=6, minute=0, second=0, microsecond=0)
-        PM20 = now.replace(hour=20, minute=0, second=0, microsecond=0)
 
-        if AM6.time() >= now.time() >= PM20.time() :
-            raise Exception('EstacionamentoFechadoException')
-        else:
-            new_ticket = Ticket(now, vehicle)
-            self.__active_tickets.append(new_ticket)
-            return new_ticket
+        new_ticket = Ticket(now, vehicle)
+        self.__active_tickets.append(new_ticket)
+        return new_ticket
 
     def pay_ticket(self, ticket):
         now = datetime.now()
-        AM6 = now.replace(hour=6, minute=0, second=0, microsecond=0)
-        PM20 = now.replace(hour=20, minute=0, second=0, microsecond=0)
 
-        ticket.set_exit_time
-        if AM6.time() >= now.time() >= PM20.time() :
-            raise Exception('EstacionamentoFechadoException')
-        else:
-            ticket.set_exit_time(now)
+        ticket.set_exit_time(now)
 
-        elapsed_time = ticket.elapsed_time()
+        days, minutes = ticket.elapsed_time()
 
         if ticket.vehicle.person() !=None:
             rate = MonthlyParkingRate()
-        elif elapsed_time < 15 :
-            rate = ParkingRate()
-        elif 15 <= elapsed_time < 9*60:
-            rate = FracParkingRate()
-        elif 9*60 <= elapsed_time:
-            rate = HourParkingRate()
+        elif days > 0:
+            rate = NightParkingRate()
+            amount = rate.payment(days,minutes)
         else:
-            rate = DailyParkingRate()
+            if minutes < 15 :
+                rate = ParkingRate()
+            elif 15 <= minutes < 9*60:
+                rate = FracParkingRate()
+            elif 9*60 <= minutes:
+                rate = HourParkingRate()
+            else:
+                rate = DailyParkingRate()
+
+            amount = rate.payment(minutes)
 
         ticket.paid()
         self.__active_tickets.remove(ticket)
 
-        amount = rate.payment(elapsed_time)
         return amount
 
 

@@ -64,10 +64,15 @@ class Account(Person):
 
 class Ticket():
     def __init__(self, entry_time, vehicle, status=ParkingTicketStatus.ACTIVE):
-        self.__status = status
-        self.entry_time = entry_time
-        self.exit_time = entry_time
-        self.vehicle = vehicle
+        self.AM6 = entry_time.replace(hour=6, minute=0, second=0, microsecond=0)
+        self.PM20 = entry_time.replace(hour=20, minute=0, second=0, microsecond=0)
+        if self.AM6.time() >= entry_time.time() >= self.PM20.time() :
+            raise Exception('EstacionamentoFechadoException')
+        else:
+            self.__status = status
+            self.entry_time = entry_time
+            self.exit_time = entry_time
+            self.vehicle = vehicle
 
     def status(self):
         return self.__status
@@ -79,23 +84,22 @@ class Ticket():
         self.__status = ParkingTicketStatus.PAID
 
     def set_exit_time(self,exit_time):
-        self.exit_time = exit_time
+        if self.AM6.time() >= exit_time.time() >= self.PM20.time() :
+            raise Exception('EstacionamentoFechadoException')
+        else:
+            self.exit_time = exit_time
 
     def elapsed_time(self):
         diff =  self.exit_time -  self.entry_time
-        return int(diff.total_seconds()/60)
+        # minutes = int(diff.total_seconds()/60)
+        dates =  AM6.date() -  PM8.date()
+        days = dates.days
+        minutes = int(diff.total_seconds()/60) - days*10*60
+        return days, minutes
 
 if __name__ == "__main__":
     now = datetime.now()
     # tick = Ticket(now,None)
-    AM6 = now.replace(day= 17,hour=6, minute=0, second=0, microsecond=0)
-    time =  now -  AM6
-    minutes = int(time.total_seconds()/60)
-    # hours = int(time.)
-
-
-    days = time.days
-    print(minutes)
-    # PM20 = now.replace(hour=20, minute=0, second=0, microsecond=0)
-
+    AM6 = now.replace(day= 18,hour=6, minute=0, second=0, microsecond=0)
+    PM8 = now.replace(day= 17,hour=20, minute=0, second=0, microsecond=0)
 
