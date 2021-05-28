@@ -1,0 +1,24 @@
+Entrega 2 - Cadastros
+---------------------
+
+OBS.: uma parte considerável do projeto está em outro paradigma que não OO (main.py). -30 pontos. 
+
+- Os cadastros de veiculos, clientes e acessos estão funcionando adequadamente,
+  com o armazenamento dos objetos em memória? (-10 pontos para cada classe
+  faltante, limitados a -30 pontos)
+    OBs.: faltando cadastro de pessoa fisica. 
+    Numero de cadastros faltantes: 1 , -10 pontos. 
+
+- As associações entre classes, incluindo as multiplicidades dessas
+  associações, estão sendo realizadas em memória? (-10 pontos para cada
+  associação errada, limitados a -30 pontos). 
+    Numero de associação não implementadas corretamente: 
+
+- As exceções estão implementadas corretamente? Classes de exceção foram
+  definidas? Objetos de exceção estão sendo lançados e capturados? (-10 pontos
+  por erro inconsistencia identificada, limitados a -30 pontos). 
+    OBs.: As excecoes pedidas no enunciado nao foram lancadas / capturadas.
+    Apenas exceçoes do tipo Exception.
+    Número de exceções não criadas / lancadas / capturadas:  -30 pontos. 
+
+TOTAL DE PONTOS OBTIDOS: 30 pontos.
